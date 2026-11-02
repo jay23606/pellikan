@@ -72,7 +72,7 @@ These were found by reading the code and measuring. Items struck through have be
    verse numbers).
 2. ~~**`text-brand` fails in light mode**~~ Fixed, see 1. Original note: **`text-brand` fails in light mode** (3.3:1) and is used for small bold uppercase labels such as "Footnote" and the
    the Commentary and Dictionary source labels. Use a darker variant for text.
-3. **No skip link.** Keyboard users tab through the sidebar, top bar and tab strip on every page before reaching the
+3. ~~**No skip link.**~~ Fixed: a "Skip to main content" link is the first focusable element and moves focus to `<main id="main">`. Original note: **No skip link.** Keyboard users tab through the sidebar, top bar and tab strip on every page before reaching the
    content. Add a "Skip to main content" link as the first focusable element.
 4. ~~**The command palette does not trap focus.**~~ Fixed: Tab and Shift+Tab wrap inside the dialog and focus returns to the opener on close. Original note: **The command palette does not trap focus.** It declares `aria-modal="true"` but Tab can move to the page behind it.
    Trap focus inside while open and return it to the control that opened it when it closes.

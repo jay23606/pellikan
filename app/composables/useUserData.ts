@@ -1,4 +1,4 @@
-// Notes, highlights and reading preferences.
+﻿// Notes, highlights and reading preferences.
 //
 // Stored in localStorage for now. The real home for notes and highlights is user.db (the schema exists in
 // data/schema/user.sql) but the Rust side has no write commands yet. Everything goes through this file, so
@@ -35,6 +35,12 @@ export function useUserData() {
   const highlights = useState<Record<string, HighlightColor>>('user-highlights', () => ({}))
   const prefs = useState<Prefs>('user-prefs', () => ({ fontSize: 20, redLetters: true, focus: false, translation: 'WEB' }))
   const loaded = useState('user-data-loaded', () => false)
+
+  // Preferences are needed during page setup (before app.vue's mounted hook). Read them eagerly
+  // in the browser so the reader's first query uses the saved translation. Keep SSR deterministic.
+  if (!loaded.value && typeof localStorage !== 'undefined') {
+    prefs.value = load<Prefs>(KEYS.prefs, prefs.value)
+  }
 
   function init() {
     if (loaded.value) return

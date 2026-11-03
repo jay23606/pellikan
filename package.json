@@ -22,7 +22,7 @@
     "data:packs": "node --disable-warning=ExperimentalWarning data/scripts/build-packs.mjs",
     "data:check": "node --disable-warning=ExperimentalWarning data/scripts/check-db.mjs",
     "data": "npm run data:fetch && npm run data:build && npm run data:check",
-    "test": "node --disable-warning=ExperimentalWarning --test \"data/scripts/**/*.test.mjs\" \"shared/**/*.test.mjs\" \"app/**/*.test.mjs\""
+    "test": "node --disable-warning=ExperimentalWarning --test \"data/scripts/**/*.test.mjs\" \"shared/**/*.test.mjs\" \"server/**/*.test.mjs\" \"app/**/*.test.mjs\""
   },
   "dependencies": {
     "@tauri-apps/api": "^2.12.4",

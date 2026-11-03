@@ -1,4 +1,4 @@
-import { BOOK_BY_OSIS } from '~~/shared/books'
+import { BOOK_BY_OSIS } from '../../shared/books.ts'
 
 // Browser-style tabs. A tab is just a route; the route drives the active tab (navigating inside a tab
 // replaces that tab's path), and clicking a tab navigates back to its path.

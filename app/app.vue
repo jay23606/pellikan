@@ -30,6 +30,7 @@ watch(() => route.fullPath, (p) => { if (p !== '/') sync(p) })
       class="fixed left-2 top-2 z-50 -translate-y-[200%] rounded-md bg-accent px-3 py-2 text-sm font-medium text-accent-fg focus:translate-y-0"
       @click.prevent="skipToMain"
     >Skip to main content</a>
+    <NuxtRouteAnnouncer />
     <AppSidebar />
     <div class="flex min-w-0 flex-1 flex-col">
       <TopBar />

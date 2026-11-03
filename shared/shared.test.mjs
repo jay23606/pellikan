@@ -34,6 +34,16 @@ test('parseReference: common forms', () => {
   assert.deepEqual(p('Genesis'), ['Gen', undefined, undefined, undefined])
   assert.deepEqual(p('Phlm 1:4'), ['Phlm', 1, 4, undefined])
   assert.deepEqual(p('Phil 4:13'), ['Phil', 4, 13, undefined])
+  assert.deepEqual(p('Rom 8:28–30'), ['Rom', 8, 28, 30])
+  assert.deepEqual(p('Rom 8:28—30'), ['Rom', 8, 28, 30])
+  assert.deepEqual(p('2nd Cor 5:17'), ['2Cor', 5, 17, undefined])
+  assert.deepEqual(p('3rd John 4'), ['3John', 4, undefined, undefined])
+  assert.deepEqual(p('III John 1:4'), ['3John', 1, 4, undefined])
+  assert.deepEqual(p('Jude 5'), ['Jude', 5, undefined, undefined])
+  assert.deepEqual(p('qoh 1:2'), ['Eccl', 1, 2, undefined])
+  assert.deepEqual(p('cant 1:1'), ['Song', 1, 1, undefined])
+  assert.deepEqual(p('revelations 21:4'), ['Rev', 21, 4, undefined])
+  assert.deepEqual(p('apocalypse 1:1'), ['Rev', 1, 1, undefined])
 })
 
 test('parseReference: rejects junk instead of guessing', () => {
@@ -41,6 +51,10 @@ test('parseReference: rejects junk instead of guessing', () => {
   assert.equal(parseReference('3:16'), null)
   assert.equal(parseReference('John 3:18-16'), null)
   assert.equal(parseReference('John 0'), null)
+  assert.equal(parseReference('John 1:0'), null)
+  assert.equal(parseReference('John 0:1'), null)
+  assert.equal(parseReference('Narnia 1:1'), null)
+  assert.equal(parseReference('   '), null)
   assert.equal(parseReference(''), null)
 })
 
@@ -95,4 +109,11 @@ test('toFtsQuery never emits raw FTS syntax', () => {
   assert.equal(toFtsQuery('grace OR NEAR(a b) -x*'), '"grace" "OR" "NEAR" "a" "b" "x"*')
   assert.equal(toFtsQuery('   '), null)
   assert.equal(toFtsQuery('***'), null)
+})
+
+test('toFtsQuery: punctuation-only input yields null (search page empty-query path)', () => {
+  for (const q of ['???', '***', '@#$', '   ', '""']) {
+    assert.equal(toFtsQuery(q, { prefix: false }), null, q)
+  }
+  assert.ok(toFtsQuery('love', { prefix: false }))
 })

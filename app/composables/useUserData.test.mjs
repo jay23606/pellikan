@@ -1,10 +1,39 @@
-import { test } from 'node:test'
+import { test, beforeEach } from 'node:test'
 import assert from 'node:assert/strict'
-import { readFileSync } from 'node:fs'
+import { useUserData } from './useUserData.ts'
 
-const source = readFileSync(new URL('./useUserData.ts', import.meta.url), 'utf8')
+// Minimal stand-ins for Nuxt's useState and the browser's localStorage. Each key gets one shared holder,
+// as useState does within an app instance.
+const states = new Map()
+globalThis.useState = (key, init) => {
+  if (!states.has(key)) states.set(key, { value: init() })
+  return states.get(key)
+}
 
-test('user data loads saved preferences eagerly while keeping localStorage out of SSR setup', () => {
-  assert.match(source, /if\s*\(!loaded\.value\s*&&\s*typeof localStorage !== 'undefined'\)\s*\{\s*prefs\.value\s*=\s*load<Prefs>\(KEYS\.prefs,\s*prefs\.value\)\s*\}/,
-    'saved preferences are not loaded before the reader reads translation.id')
+function stubLocalStorage(items) {
+  Object.defineProperty(globalThis, 'localStorage', {
+    value: { getItem: (key) => items[key] ?? null, setItem() {} },
+    configurable: true,
+  })
+}
+
+beforeEach(() => {
+  states.clear()
+  Reflect.deleteProperty(globalThis, 'localStorage')
+})
+
+test('saved translation is in prefs before init() runs', () => {
+  stubLocalStorage({ 'pellikan.prefs': JSON.stringify({ translation: 'BSB' }) })
+
+  const { prefs } = useUserData()
+
+  assert.equal(prefs.value.translation, 'BSB')
+})
+
+test('without localStorage (SSR) prefs keep the default translation and nothing throws', () => {
+  assert.equal(typeof globalThis.localStorage, 'undefined')
+
+  const { prefs } = useUserData()
+
+  assert.equal(prefs.value.translation, 'WEB')
 })

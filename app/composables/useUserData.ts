@@ -1,4 +1,4 @@
-﻿// Notes, highlights and reading preferences.
+// Notes, highlights and reading preferences.
 //
 // Stored in localStorage for now. The real home for notes and highlights is user.db (the schema exists in
 // data/schema/user.sql) but the Rust side has no write commands yet. Everything goes through this file, so
